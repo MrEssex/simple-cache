@@ -6,6 +6,8 @@ use MrEssex\FileCache\Exceptions\InvalidArgumentException;
 use DateInterval;
 use DateTime;
 use Psr\SimpleCache\CacheInterface;
+use function file_exists;
+use function str_replace;
 
 /**
  * Class FileCache
@@ -142,9 +144,7 @@ class FileCache
      */
     private function _getPath(string $key): string
     {
-        if (substr($key, -1) === '/') {
-            $key = substr($key, 0, -1);
-        }
+        $key = str_replace('/', '', $key);
 
         return $this->_directoryPath . $key;
     }
@@ -279,10 +279,10 @@ class FileCache
      */
     public function has($key): bool
     {
-        $path = $this->_getPath($key);
         $keyOriginal = $key;
-        $key  = $this->_generateKey($key);
+        $key = $this->_generateKey($key);
         $this->_validateKey($key);
+        $path = $this->_getPath($key);
 
         if (! $this->_checkFileIsNotAtEndOfLife($path, $keyOriginal)) {
             return false;
