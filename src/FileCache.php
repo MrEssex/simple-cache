@@ -35,7 +35,7 @@ class FileCache
             // assume we are running from vendor;
             $this->_directoryPath = dirname(
                 __DIR__,
-                5
+                4
               ) . self::CACHE_PATH;
         }
 
