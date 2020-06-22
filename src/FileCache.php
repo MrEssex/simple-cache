@@ -142,6 +142,10 @@ class FileCache
      */
     private function _getPath(string $key): string
     {
+        if (substr($key, -1) === '/') {
+            $key = substr($key, 0, -1);
+        }
+
         return $this->_directoryPath . $key;
     }
 
