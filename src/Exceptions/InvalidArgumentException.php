@@ -1,6 +1,6 @@
 <?php
 
-namespace MrEssex\FileCache\Cache\Exceptions;
+namespace MrEssex\FileCache\Exceptions;
 
 use Psr\SimpleCache\InvalidArgumentException as IInvalidArgumentException;
 

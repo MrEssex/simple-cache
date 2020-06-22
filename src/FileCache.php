@@ -1,8 +1,8 @@
 <?php
 
-namespace MrEssex\FileCache\Cache;
+namespace MrEssex\FileCache;
 
-use MrEssex\FileCache\Cache\Exceptions\InvalidArgumentException;
+use MrEssex\FileCache\Exceptions\InvalidArgumentException;
 use DateInterval;
 use DateTime;
 use Psr\SimpleCache\CacheInterface;

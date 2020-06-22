@@ -2,7 +2,7 @@
 
 namespace MrEssex\FileCache\Tests\Cache;
 
-use MrEssex\FileCache\Cache\FileCache;
+use MrEssex\FileCache\FileCache;
 use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\InvalidArgumentException;
 
