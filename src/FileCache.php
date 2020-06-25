@@ -2,24 +2,26 @@
 
 namespace MrEssex\FileCache;
 
-use MrEssex\FileCache\Exceptions\InvalidArgumentException;
 use DateInterval;
 use DateTime;
+use MrEssex\FileCache\Exceptions\InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
+
 use function file_exists;
-use function str_replace;
+use function realpath;
 
 /**
  * Class FileCache
+ *
  * @package MrEssex\FileCache\Cache
  */
-class FileCache
-  implements CacheInterface
+class FileCache implements CacheInterface
 {
-
     public const CACHE_PATH = DIRECTORY_SEPARATOR . '.tmp' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR;
+
     /** @var string|null */
     protected ?string $_directoryPath;
+
     /** @var int */
     protected int $_ttl = 3600;
 
@@ -35,10 +37,7 @@ class FileCache
 
         if ($directoryPath === null) {
             // assume we are running from vendor;
-            $this->_directoryPath = dirname(
-                __DIR__,
-                4
-              ) . self::CACHE_PATH;
+            $this->_directoryPath = dirname(__DIR__, 4) . self::CACHE_PATH;
         }
 
         if ($ttl !== null) {
@@ -52,9 +51,9 @@ class FileCache
             throw InvalidArgumentException::directoryDoesNotExistAndCannotBeCreated($this->_directoryPath);
         }
 
-        if ((!is_readable($this->_directoryPath) || !is_writable($this->_directoryPath)) || (realpath(
+        if ((realpath($this->_directoryPath) === false) || (!is_readable($this->_directoryPath) || !is_writable(
               $this->_directoryPath
-            ) === false)) {
+            ))) {
             throw InvalidArgumentException::directoryDoesNotExistAndCannotBeCreated($this->_directoryPath);
         }
     }
@@ -86,12 +85,17 @@ class FileCache
      *
      * @return string
      */
-    private function _generateKey(string $key): string
+    protected function _generateKey(string $key): string
     {
         return md5($key);
     }
 
-    private function _validateKey(string $key): bool
+    /**
+     * @param mixed $key
+     *
+     * @return bool
+     */
+    protected function _validateKey($key): bool
     {
         if (!is_string($key)) {
             throw InvalidArgumentException::keyIsNotAString($key);
@@ -142,10 +146,8 @@ class FileCache
      *
      * @return string
      */
-    private function _getPath(string $key): string
+    protected function _getPath(string $key): string
     {
-        $key = str_replace('/', '', $key);
-
         return $this->_directoryPath . $key;
     }
 
@@ -154,13 +156,11 @@ class FileCache
      *
      * @return int
      */
-    private function _expirationToTimestamp(?int $ttl): int
+    protected function _expirationToTimestamp(?int $ttl): int
     {
         if ($ttl instanceof DateInterval) {
             $ttl = $ttl->format('%s');
-        }
-
-        if ($ttl instanceof DateTime) {
+        } elseif ($ttl instanceof DateTime) {
             $ttl = $ttl->getTimestamp();
         }
 
@@ -200,7 +200,7 @@ class FileCache
      */
     public function clear(): bool
     {
-        $files = array_diff(scandir($this->_directoryPath), ['.', '..', '.*']);
+        $files   = array_diff(scandir($this->_directoryPath), ['.', '..', '.*']);
         $success = true;
 
         foreach ($files as $file) {
@@ -216,7 +216,8 @@ class FileCache
      * @param iterable $keys    A list of keys that can obtained in a single operation.
      * @param mixed    $default Default value to return for keys that do not exist.
      *
-     * @return iterable A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
+     * @return iterable A list of key => value pairs. Cache keys that do not exist or are stale will have $default as
+     *                  value.
      *
      * @throws InvalidArgumentException
      *   MUST be thrown if $keys is neither an array nor a Traversable,
@@ -280,11 +281,11 @@ class FileCache
     public function has($key): bool
     {
         $keyOriginal = $key;
-        $key = $this->_generateKey($key);
+        $key         = $this->_generateKey($key);
         $this->_validateKey($key);
         $path = $this->_getPath($key);
 
-        if (! $this->_checkFileIsNotAtEndOfLife($path, $keyOriginal)) {
+        if (!$this->_checkFileIsNotAtEndOfLife($path, $keyOriginal)) {
             return false;
         }
 
@@ -301,17 +302,18 @@ class FileCache
      *
      * @return bool
      */
-    private function _checkFileIsNotAtEndOfLife(string $path, string $key): bool {
-
-        if(!file_exists($path)) {
+    protected function _checkFileIsNotAtEndOfLife(string $path, string $key): bool
+    {
+        if (!file_exists($path)) {
             return false;
         }
 
         $timestamp = filemtime($path);
-        $time = time();
+        $time      = time();
 
         if ($timestamp <= $time) {
             $this->delete($key);
+
             return false;
         }
 

@@ -29,47 +29,47 @@ class InvalidArgumentException
     }
 
     /**
-     * @param string $key
+     * @param mixed $key
      *
      * @return InvalidArgumentException
      */
-    public static function keyIsNotAString(string $key): InvalidArgumentException
+    public static function keyIsNotAString($key): InvalidArgumentException
     {
         return new self(
           sprintf(
             "The specified key: %s is not a string!",
             $key
-          ), 5
+          ), 500
         );
     }
 
     /**
-     * @param string $key
+     * @param mixed|null $key
      *
      * @return InvalidArgumentException
      */
-    public static function keyIsEmpty(string $key): InvalidArgumentException
+    public static function keyIsEmpty($key): InvalidArgumentException
     {
         return new self(
           sprintf(
             "The specified key: %s is empty!",
             $key
-          ), 5
+          ), 500
         );
     }
 
     /**
-     * @param string $key
+     * @param mixed $key
      *
      * @return InvalidArgumentException
      */
-    public static function keyContainsInvalidCharacters(string $key): InvalidArgumentException
+    public static function keyContainsInvalidCharacters($key): InvalidArgumentException
     {
         return new self(
           sprintf(
             "The specified key: %s must only contain [A-Z] [a-z] [0-9] [_] [.] [-] characters!",
             $key
-          ), 5
+          ), 500
         );
     }
 
