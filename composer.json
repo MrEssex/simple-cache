@@ -1,22 +1,33 @@
 {
-    "name": "mressex/file-cache",
-    "authors": [
-        {
-            "name": "Kyle Essex"
-        }
-    ],
-    "require": {
-        "phpunit/phpunit": "^9.2",
-        "psr/simple-cache": "^1.0"
+  "name": "mressex/cache",
+  "type": "library",
+  "description": "Different PSR-16 cache implementations ",
+  "keywords": [
+    "Cache",
+    "Caching"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Kyle Essex"
     }
-    ,
-    "require-dev": {
-        "roave/security-advisories": "dev-master"
-    },
-    "autoload": {
-        "psr-4": {
-            "MrEssex\\FileCache\\": "src",
-            "MrEssex\\FileCache\\Tests\\": "tests"
-        }
+  ],
+  "require": {
+    "php": "^7.4",
+    "ext-apcu": "*",
+    "phpunit/phpunit": "^9.5.2",
+    "psr/simple-cache": "^1.0"
+  },
+  "provide": {
+    "psr/simple-cache-implementation": "^1.0"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "MrEssex\\FileCache\\": "src",
+      "MrEssex\\FileCache\\Tests\\": "tests"
     }
+  }
 }
