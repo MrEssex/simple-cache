@@ -137,11 +137,6 @@ class ApcuCache extends AbstractCache
     $key = $this->_generateKey($key);
     $this->_validateKey($key);
 
-    if($this->_cacheKeys[$key])
-    {
-      return true;
-    }
-
     return apcu_exists($key);
   }
 }
