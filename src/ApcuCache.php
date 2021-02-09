@@ -64,6 +64,11 @@ class ApcuCache extends AbstractCache
       apcu_delete($key);
     }
 
+    if(!$ttl)
+    {
+      $ttl = $this->_ttl;
+    }
+
     if(apcu_add($key, $value, $ttl))
     {
       $this->_cacheKeys[] = $key;

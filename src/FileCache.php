@@ -18,16 +18,12 @@ class FileCache extends AbstractCache
   /** @var string|null */
   protected ?string $_directoryPath;
 
-  /** @var int */
-  protected int $_ttl = 3600;
-
   /**
    * FileCache constructor.
    *
    * @param string|null $directoryPath
-   * @param int|null    $ttl
    */
-  public function __construct(string $directoryPath = null, int $ttl = null)
+  public function __construct(string $directoryPath = null)
   {
     $this->_directoryPath = $directoryPath;
 
@@ -35,11 +31,6 @@ class FileCache extends AbstractCache
     {
       // assume we are running from vendor;
       $this->_directoryPath = dirname(__DIR__, 4) . self::CACHE_PATH;
-    }
-
-    if($ttl !== null)
-    {
-      $this->_ttl = $ttl;
     }
 
     // Try to create the directory if it doesn't exist
@@ -109,6 +100,11 @@ class FileCache extends AbstractCache
     $key = $this->_generateKey($key);
     $path = $this->_getPath($key);
     $this->_validateKey($key);
+
+    if(!$ttl)
+    {
+      $ttl = $this->_ttl;
+    }
 
     $success = file_put_contents($path, serialize($value));
 

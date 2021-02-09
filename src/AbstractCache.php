@@ -14,6 +14,20 @@ use Psr\SimpleCache\CacheInterface;
 abstract class AbstractCache implements CacheInterface
 {
 
+  /** @var int */
+  protected int $_ttl = 3600;
+
+  /**
+   * @param int $ttl
+   *
+   * @return AbstractCache
+   */
+  public function setTtl(int $ttl): AbstractCache
+  {
+    $this->_ttl = $ttl;
+    return $this;
+  }
+
   /**
    * @param string $key
    *
