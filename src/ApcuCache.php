@@ -3,7 +3,7 @@
 namespace MrEssex\FileCache;
 
 use DateInterval;
-use Psr\SimpleCache\InvalidArgumentException;
+use MrEssex\FileCache\Exceptions\InvalidArgumentException;
 
 class ApcuCache extends AbstractCache
 {
