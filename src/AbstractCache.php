@@ -9,6 +9,7 @@ use Psr\SimpleCache\CacheInterface;
 
 /**
  * Class AbstractCache
+ *
  * @package MrEssex\FileCache
  */
 abstract class AbstractCache implements CacheInterface
@@ -64,11 +65,11 @@ abstract class AbstractCache implements CacheInterface
   }
 
   /**
-   * @param int|null|string $ttl
+   * @param int|null|DateTime|DateInterval|string $ttl
    *
    * @return int
    */
-  protected function _expirationToTimestamp(?int $ttl): int
+  protected function _expirationToTimestamp($ttl): int
   {
     if($ttl instanceof DateInterval)
     {
@@ -105,7 +106,19 @@ abstract class AbstractCache implements CacheInterface
    */
   public function getMultiple($keys, $default = null)
   {
-    // TODO: Implement getMultiple() method.
+    if(!is_array($keys) && !$keys instanceof \Traversable)
+    {
+      throw InvalidArgumentException::invalidTraversableArgument();
+    }
+
+    $values = [];
+
+    foreach($keys as $key)
+    {
+      $values[$key] = $this->get($key, $default);
+    }
+
+    return $values;
   }
 
   /**
@@ -124,7 +137,19 @@ abstract class AbstractCache implements CacheInterface
    */
   public function setMultiple($values, $ttl = null)
   {
-    // TODO: Implement setMultiple() method.
+    if(!is_array($values) && !$values instanceof \Traversable)
+    {
+      throw InvalidArgumentException::invalidTraversableArgument();
+    }
+
+    $success = true;
+
+    foreach($values as $key => $value)
+    {
+      $success = $this->set($key, $value) && $success;
+    }
+
+    return $success;
   }
 
   /**
@@ -140,6 +165,18 @@ abstract class AbstractCache implements CacheInterface
    */
   public function deleteMultiple($keys)
   {
-    // TODO: Implement deleteMultiple() method.
+    if(!is_array($keys) && !$keys instanceof \Traversable)
+    {
+      throw InvalidArgumentException::invalidTraversableArgument();
+    }
+
+    $success = true;
+
+    foreach($keys as $key)
+    {
+      $success = $this->delete($key) && $success;
+    }
+
+    return $success;
   }
 }

@@ -83,4 +83,14 @@ class InvalidArgumentException
     );
   }
 
+  /**
+   * @return InvalidArgumentException
+   */
+  public static function invalidTraversableArgument(): InvalidArgumentException
+  {
+    return new self(
+      "Argument 1 must be an array or a Traversable", 500
+    );
+  }
+
 }

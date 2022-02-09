@@ -9,6 +9,7 @@ use function realpath;
 
 /**
  * Class FileCache
+ *
  * @package MrEssex\FileCache
  */
 class FileCache extends AbstractCache
